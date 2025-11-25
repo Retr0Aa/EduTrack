@@ -40,6 +40,7 @@ namespace EduTrack
                 for (int i = 0; i < list.Count; i++)
                     Console.WriteLine($"{i + 1}. {list[i]}");
 
+            Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
         }
 
@@ -55,7 +56,9 @@ namespace EduTrack
             int gr = int.Parse(Console.ReadLine());
 
             school.AddStudent(fn, ln, gr);
+
             Console.WriteLine("Added!");
+            Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
         }
 
@@ -65,6 +68,7 @@ namespace EduTrack
             if (list.Count == 0)
             {
                 Console.WriteLine("No students.");
+                Console.WriteLine("\nPress any key to return...");
                 Console.ReadKey();
                 return;
             }
@@ -77,6 +81,7 @@ namespace EduTrack
             school.DeleteStudent(selected);
 
             Console.WriteLine("Removed!");
+            Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
         }
 
@@ -86,6 +91,7 @@ namespace EduTrack
             if (list.Count == 0)
             {
                 Console.WriteLine("No students.");
+                Console.WriteLine("\nPress any key to return...");
                 Console.ReadKey();
                 return;
             }
@@ -99,9 +105,9 @@ namespace EduTrack
             string[] gradeMenu = { "Add Grade", "Remove Grade", "View Grades", "Back" };
             while (true)
             {
-                int c = Menu("Grades Menu", gradeMenu);
-                Console.Clear();
 
+                int c = Menu($"Grades Menu - \x1b[94m{student.FirstName} {student.LastName}", gradeMenu);
+                Console.Clear();
                 if (c == 0) AddGrade(student);
                 if (c == 1) RemoveGrade(student);
                 if (c == 2) ViewGrades(student);
@@ -115,6 +121,8 @@ namespace EduTrack
             Console.Write("Grade (1–6): ");
             int g = int.Parse(Console.ReadLine());
 
+            Console.WriteLine("\nPress any key to return...");
+
             s.AddGrade(subjects[sub], g);
             school.Save();
         }
@@ -127,6 +135,7 @@ namespace EduTrack
                 s.Subjects[subjects[sub]].Count == 0)
             {
                 Console.WriteLine("No grades.");
+                Console.WriteLine("\nPress any key to return...");
                 Console.ReadKey();
                 return;
             }
@@ -148,6 +157,7 @@ namespace EduTrack
                 Console.Write($"{pair.Key}: ");
                 Console.WriteLine(string.Join(", ", pair.Value));
             }
+            Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
         }
 
@@ -159,7 +169,10 @@ namespace EduTrack
             do
             {
                 Console.Clear();
+                if (title == "=== EduTrack ===")
+                    Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine(title + "\n");
+                Console.ForegroundColor = ConsoleColor.Gray;
 
                 for (int i = 0; i < items.Length; i++)
                 {
