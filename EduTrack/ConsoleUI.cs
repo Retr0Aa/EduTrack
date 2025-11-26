@@ -35,7 +35,12 @@ namespace EduTrack
             var list = school.GetStudents();
             Console.WriteLine("--- Students ---\n");
 
-            if (list.Count == 0) Console.WriteLine("No students.");
+            if (list.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("No students.");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
             else
                 for (int i = 0; i < list.Count; i++)
                     Console.WriteLine($"{i + 1}. {list[i]}");
@@ -53,11 +58,26 @@ namespace EduTrack
             string ln = Console.ReadLine();
 
             Console.Write("Grade: ");
-            int gr = int.Parse(Console.ReadLine());
+            int gr = 0;
+            if (int.TryParse(Console.ReadLine(), out int tempGrade))
+            {
+                gr = tempGrade;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Invalid grade!");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("\nPress any key to return...");
+                Console.ReadKey();
+                return;
+            }
 
             school.AddStudent(fn, ln, gr);
 
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Added!");
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
         }
@@ -67,7 +87,9 @@ namespace EduTrack
             var list = school.GetStudents();
             if (list.Count == 0)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("No students.");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("\nPress any key to return...");
                 Console.ReadKey();
                 return;
@@ -77,10 +99,16 @@ namespace EduTrack
             for (int i = 0; i < list.Count; i++)
                 opts[i] = $"{list[i]}";
 
-            int selected = Menu("Choose student:", opts);
+            List<string> menuOptions = [.. opts, "Back"];
+            int selected = Menu("Choose student:", menuOptions.ToArray());
+            if (selected == list.Count)
+                return;
+
             school.DeleteStudent(selected);
 
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Removed!");
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
         }
@@ -90,7 +118,9 @@ namespace EduTrack
             var list = school.GetStudents();
             if (list.Count == 0)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("No students.");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("\nPress any key to return...");
                 Console.ReadKey();
                 return;
@@ -118,12 +148,19 @@ namespace EduTrack
         private void AddGrade(Student s)
         {
             int sub = Menu("Choose subject:", subjects);
-            Console.Write("Grade (1–6): ");
-            int g = int.Parse(Console.ReadLine());
+            Console.Write("Grade (2–6): ");
+            double g = double.Parse(Console.ReadLine());
+            if (g < 2 || g > 6)
+            {
+                Console.WriteLine("Invalid grade.");
+                Console.ReadKey();
+                return;
+            }
+
+            s.AddGrade(subjects[sub], double.Round(g, 2));
 
             Console.WriteLine("\nPress any key to return...");
 
-            s.AddGrade(subjects[sub], g);
             school.Save();
         }
 
@@ -134,7 +171,9 @@ namespace EduTrack
             if (!s.Subjects.ContainsKey(subjects[sub]) ||
                 s.Subjects[subjects[sub]].Count == 0)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("No grades.");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("\nPress any key to return...");
                 Console.ReadKey();
                 return;
@@ -169,8 +208,7 @@ namespace EduTrack
             do
             {
                 Console.Clear();
-                if (title == "=== EduTrack ===")
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine(title + "\n");
                 Console.ForegroundColor = ConsoleColor.Gray;
 
